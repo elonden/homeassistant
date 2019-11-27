@@ -1,0 +1,127 @@
+title: Home
+views:
+  - path: default_view
+    title: Home
+    icon: 'mdi:home'
+    badges:
+      - entity: device_tracker.erwins_iphone
+      - entity: sensor.amsterdam
+      - entity: sensor.ssl_cert
+      - entity: sensor.pi_temperature
+
+    type: horizontal-stack
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: entities
+            entities:
+              - sensor.total_power
+              - sensor.sw111
+              - sensor.sw112
+              - sensor.sw113
+              - sensor.sw115
+            title: Power Sensors
+            show_header_toggle: false
+          - type: entities
+            entities:
+              - sensor.current_power
+              - sensor.todays_energy
+              - sensor.total_energy
+            title: Solar power
+            show_header_toggle: false
+
+      - type: gauge
+        entity: sensor.bom_gympie_air_temp_c
+#           - sensor.bom_gympie_pressure_mb
+#           - sensor.bom_gympie_rain_today
+#           - sensor.bom_gympie_relative_humidity
+#           - sensor.bom_gympie_wind_direction
+#           - sensor.bom_gympie_wind_speed_kmh
+        title: Weather
+        show_header_toggle: false
+        min: 0
+        max: 50
+        severity:
+          green: 0
+          yellow: 30
+          red: 35
+
+      - type: weather-forecast
+        entity: weather.home
+        name: Weather
+
+#      - type: entities
+#        entities:
+#          - sensor.pir_led4
+#        title: PIR Sensors
+#        show_header_toggle: false
+
+      - type: entities
+        entities:
+          - binary_sensor.protection_window
+          - sensor.current_ozone_level
+          - sensor.current_uv_index
+        title: UV Info
+        show_header_toggle: false
+      - type: entities
+        entities:
+          - sensor.speedtest_download
+          - sensor.speedtest_upload
+          - sensor.speedtest_ping
+        title: Internet speed
+        show_header_toggle: false
+
+#############################
+
+  - path: main_lights_view
+    title: Lights
+    badges: []
+    cards:
+      - type: light
+        entity: light.led1
+        name: South LED
+      - type: light           
+        entity: light.led2
+        name: Pool LED
+ 
+      - type: light           
+        entity: light.garden_lights
+        name: Garden Lights
+
+      - type: light           
+        entity: light.main_stairs
+        name: Stairs
+
+        title: Lights
+        show_header_toggle: true
+      - type: entities
+        entities:
+          - light.led4
+          - input_number.led4_speed
+        title: Animated LEDS
+        show_header_toggle: true
+    icon: 'mdi:lightbulb-on'
+
+  - path: main_power_view
+    title: Power
+    badges: []
+    cards:
+      - type: entities
+        entities:
+          - switch.sw111
+        title: Power Switches
+        show_header_toggle: false
+      - type: entities
+        entities:
+          - input_number.poolpump_time
+          - switch.sw115
+        title: Automations
+        show_header_toggle: false
+    icon: 'mdi:flash'
+  - path: main_media_view
+    title: Media
+    badges: []
+    cards:
+      - type: media-control
+        entity: media_player.kodi
+    icon: 'mdi:ice-cream'

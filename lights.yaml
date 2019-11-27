@@ -1,0 +1,67 @@
+  - platform: mqtt
+#    schema: json
+    name: "led2"
+    command_topic: "/home/switch/led2/relay/0/set"
+    state_topic: "/home/switch/led2/relay/0"
+    rgb_command_topic: "/home/switch/led2/rgb/set"
+    rgb_state_topic: "/home/switch/led2/rgb"
+    white_value_command_topic: "/home/switch/led2/channel/3/set"
+    payload_on: 1
+    payload_off: 0
+#    rgb: true
+    brightness_command_topic: "/home/switch/led2/brightness/set"
+
+  - platform: mqtt
+#    schema: json
+    name: "led1"
+    command_topic: "/home/switch/led1/relay/0/set"
+    state_topic: "/home/switch/led1/relay/0"
+    rgb_command_topic: "/home/switch/led1/rgb/set"
+    rgb_state_topic: "/home/switch/led1/rgb"
+    white_value_command_topic: "/home/switch/led1/channel/3/set"
+    payload_on: 1
+    payload_off: 0
+#    rgb: true
+    brightness_command_topic: "/home/switch/led1/brightness/set"
+
+
+  - platform: mqtt
+#    schema: json
+    name: "led4"
+    command_topic: "/home/switch/led4/set"
+    state_topic: "/home/switch/led4/state"
+#    effect: true
+    effect_list:
+      - ambient
+      - bpm
+      - candy cane  
+      - confetti  
+      - cyclon rainbow  
+      - dots  
+      - fire  
+      - glitter  
+      - juggle  
+      - lightning
+      - noise  
+      - police all  
+      - police one  
+      - rainbow  
+      - rainbow with glitter  
+      - ripple  
+      - sinelon  
+      - solid  
+      - twinkle  
+        #    brightness: true
+#    flash: true
+#    rgb: true
+    optimistic: false
+    qos: 0
+
+
+  - platform: switch
+    name: Main stairs
+    entity_id: switch.sw112
+
+  - platform: switch
+    name: Garden lights
+    entity_id: switch.sw113

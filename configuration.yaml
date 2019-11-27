@@ -1,0 +1,355 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret latitude
+  longitude: !secret longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 100
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Australia/Brisbane
+  customize: !include customize.yaml
+  customize_domain: !include customize_domain.yaml
+  customize_glob: !include customize_glob.yaml
+# Show links to resources in log and frontend
+#introduction:
+
+system_health:
+
+# Enables the frontend
+frontend:
+
+lovelace:
+  mode: yaml
+
+# Enable logging level
+# Severities : notset, debug, info, warn, warning, error, fatal, critical
+logger:
+  default: warning
+
+recorder:
+  purge_interval: 5
+  purge_keep_days: 10
+  
+mqtt:
+  broker: 192.168.8.49
+ #  discovery: true
+ #discovery_prefix: home
+  username: !secret mosquitto_user
+  password: !secret mosquitto_passwd
+
+
+# Enables configuration UI
+config:
+
+# Enable mobile App integration
+mobile_app:
+
+
+http:
+  # Uncomment this to add a password (recommended!)
+  #  api_password: !secret http_passwd
+  # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+  base_url: evlonden.no-ip.biz
+  ssl_certificate: !secret ssl_cert
+  ssl_key: !secret ssl_key
+  server_host: !secret bind_address
+  server_port: !secret server_port
+  #  server_port: 8132
+  #  use_x_forward_for: True
+
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Track the sun
+sun:
+
+ios:
+
+media_player:
+  - platform: kodi
+    host: 192.168.1.227
+    port: 8080
+    tcp_port: 9090
+
+ffmpeg:
+  ffmpeg_bin: /usr/bin/ffmpeg
+
+speedtestdotnet:
+  server_id: 2604
+  scan_interval:
+    #      days: 0
+    hours: 1
+    #      minutes: 15
+    #      seconds: 0
+  monitored_conditions:
+    - ping
+    - download
+    - upload
+
+sensor:
+# Weather prediction
+  - platform: bom
+    station: IDQ60801.94566
+    name: Gympie
+    monitored_conditions:
+#      - apparent_t
+#      - cloud
+#      - cloud_base_m
+#      - cloud_oktas
+#      - cloud_type_id
+#      - cloud_type
+#      - delta_t
+#      - gust_kmh
+#      - gust_kt
+      - air_temp
+#      - dewpt
+      - press
+#      - press_qnh
+#      - press_msl
+#      - press_tend
+      - rain_trace
+      - rel_hum
+#      - sea_state
+#      - swell_dir_worded
+#      - swell_height
+#      - swell_period
+#      - vis_km
+#      - weather
+      - wind_dir
+      - wind_spd_kmh
+#      - wind_spd_kt
+
+  - platform: mqtt
+    state_topic: "owntracks/erwin/Erwin"
+    name: "Erwin's iPhone Battery"
+    unit_of_measurement: "%"
+    value_template: '{{ value_json.batt}}'
+
+  - platform: mqtt
+    state_topic: "/home/switch/sw111/power"
+    name: "sw111"
+    unit_of_measurement: "W"
+
+  - platform: mqtt
+    state_topic: "/home/switch/sw112/power"
+    name: "sw112"
+    unit_of_measurement: "W"
+
+  - platform: mqtt
+    state_topic: "/home/switch/sw113/power"
+    name: "sw113"
+    unit_of_measurement: "W"
+
+  - platform: mqtt
+    state_topic: "/home/switch/sw114/power"
+    name: "sw114"
+    unit_of_measurement: "W"
+
+  - platform: mqtt
+    state_topic: "/home/switch/sw115/power"
+    name: "sw115"
+    unit_of_measurement: "W"
+
+  - platform: mqtt
+    state_topic: /home/power/solar/current_power
+    name: Current Power
+    unit_of_measurement: "KW"
+
+  - platform: mqtt
+    state_topic: /home/power/solar/total_energy
+    name: Total Energy
+    unit_of_measurement: "KWh"
+
+  - platform: mqtt
+    state_topic: /home/power/solar/today_energy
+    name: Todays Energy
+    unit_of_measurement: "KWh"
+
+  - platform: mqtt
+    name: "PIR led4"
+    state_topic: /home/pir/led4/set
+
+  - platform: template
+    sensors:
+      total_power:
+        friendly_name: "Total Power Usage"
+        unit_of_measurement: "W"
+        value_template: > 
+          {{ float(states.sensor.sw111.state) + 
+           float(states.sensor.sw112.state) + 
+           float(states.sensor.sw113.state) + 
+           float(states.sensor.sw115.state) | int}}
+
+  - platform: command_line
+    name: SSL Cert
+    unit_of_measurement: days
+    scan_interval: 21600
+    command: "/hasstools/ssl-cert-check/ssl-cert-check -b -c /etc/letsencrypt/live/evlonden.no-ip.biz/cert.pem | awk '{print $NF}'"
+
+  - platform: command_line
+    name: Pi Temperature
+    unit_of_measurement: "C"
+    scan_interval: 300
+    command: "expr $(cat /sys/class/thermal/thermal_zone0/temp) / 1000"
+
+  - platform: worldclock
+    time_zone: Europe/Amsterdam
+    name: Amsterdam
+
+
+# Text to speech
+tts:
+  - platform: google_translate
+    service_name: google_say
+    cache: true
+    cache_dir: /mnt/music/
+    time_memory: 300
+
+switch:
+  - platform: mqtt
+    name: "sw111"
+    state_topic: "/home/switch/sw111/relay/0"
+    command_topic: "/home/switch/sw111/relay/0/set"
+    payload_on: 1
+    payload_off: 0
+#    optimistic: false
+#    qos: 0
+#    retain: true
+
+  - platform: mqtt
+    name: "sw112"
+    state_topic: "/home/switch/sw112/relay/0"
+    command_topic: "/home/switch/sw112/relay/0/set"
+    payload_on: 1
+    payload_off: 0
+#    optimistic: false
+#    qos: 0
+#    retain: true
+
+  - platform: mqtt
+    name: "sw113"
+    state_topic: "/home/switch/sw113/relay/0"
+    command_topic: "/home/switch/sw113/relay/0/set"
+    payload_on: 1
+    payload_off: 0
+#    optimistic: false
+#    qos: 0
+#    retain: true
+
+  - platform: mqtt
+    name: "sw114"
+    state_topic: "/home/switch/sw114/relay/0"
+    command_topic: "/home/switch/sw114/relay/0/set"
+    payload_on: 1
+    payload_off: 0
+#    optimistic: false
+#    qos: 0
+#    retain: true
+
+  - platform: mqtt
+    name: "sw115"
+    state_topic: "/home/switch/sw115/relay/0"
+    command_topic: "/home/switch/sw115/relay/0/set"
+    payload_on: 1
+    payload_off: 0
+#    optimistic: false
+#    qos: 0
+#    retain: true
+
+
+
+
+
+
+
+
+###########################
+# Zones
+zone:
+ name: Home
+ latitude: !secret latitude
+ longitude: !secret longitude
+ radius: 500
+ icon: mdi:home
+
+zone 2:
+ name: School
+ latitude: !secret schoolzone_lat
+ longitude: !secret schoolzone_long
+ radius: 500
+ icon: mdi:school
+
+
+##########################
+# Device tracker Owntrack
+#device_tracker:
+#  - platform: owntracks
+#    max_gps_accuracy: 200
+#    waypoints: True
+#    waypoint_whitelist:
+#      - erwin
+#      - Erwin
+#      - luna
+#
+owntracks:
+  max_gps_accuracy: 200
+  waypoints: true
+  mqtt_topic: "owntracks/#"
+  events_only: false
+  waypoint_whitelist:
+    - erwin
+  
+
+openuv:
+  api_key: !secret openuvapi
+  sensors: 
+    monitored_conditions: 
+      - current_uv_index
+      - current_ozone_level
+  binary_sensors: 
+    monitored_conditions: 
+      - uv_protection_window
+
+input_number:
+  poolpump_time:
+    name: "Pool Pump run time in hours"
+    initial: 4
+    min: 2
+    max: 8
+    step: 1
+
+  led4_speed:
+    name: "Control LED speed"
+    initial: 150
+    min: 1
+    max: 150
+    step: 10
+
+light: !include lights.yaml
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+notify: !include notify.yaml
+

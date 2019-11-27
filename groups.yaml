@@ -1,0 +1,138 @@
+### View tabs
+  default_view:
+    name: Home
+    view: yes
+    icon: mdi:home
+    entities:
+      - sensor.amsterdam
+      - sensor.speedtest_download
+      - sensor.ssl_cert
+      - sensor.pi_temperature
+#      - sensor.speedtest_upload
+      - group.main_weather
+      - device_tracker.erwin_iphonexr
+      - device_tracker.luna_iphone
+      - device_tracker.cleo_iphone6
+      - group.main_power_sensors
+      - group.main_solar
+      - group.main_pir
+      - group.main_uv_info
+      - group.main_speedtest
+
+  main_lights_view:
+    name: Lights
+    icon: mdi:lightbulb-on
+    view: yes
+    entities:
+      - group.main_light_switches
+      - group.main_led_animaton
+      
+  main_power_view:
+    name: Power
+    icon: mdi:flash
+    view: yes
+    entities:
+      - group.main_power_switches
+      - group.main_automations
+
+#  main_other_view:
+#    name: Others
+#    icon: mdi:ice-cream
+#    view: yes
+#    entities:
+
+  main_media_view:
+    name: Media
+    view: yes
+    icon: mdi:ice-cream
+    entities:
+      - group.main_mediaplayer
+
+
+#####  Groups      
+#
+  main_mediaplayer:
+    name: Media player
+    entities:
+      - media_player.kodi
+        
+  main_weather:
+    name: Weather
+    entities:
+      - sensor.bom_gympie_air_temp_c
+      - sensor.bom_gympie_pressure_mb
+      - sensor.bom_gympie_rain_today
+      - sensor.bom_gympie_relative_humidity
+      - sensor.bom_gympie_wind_direction
+      - sensor.bom_gympie_wind_speed_kmh
+
+  main_uv_info:
+    name: UV Info
+    entities:
+      - binary_sensor.protection_window
+      - sensor.current_ozone_level
+      - sensor.current_uv_index
+
+  main_light_switches:
+    name: Lights
+    entities:
+      - light.led1
+      - light.led2
+      - light.garden_lights
+      - light.main_stairs
+#      - switch.sw113
+#      - switch.sw112
+
+  main_led_animaton:
+    name: "Animated LEDS"
+    entities:
+      - light.led4
+      - input_number.led4_speed
+
+  main_power_switches:
+    name: Power Switches
+    icon: mdi:flash
+    control: hidden
+    entities:
+      - switch.sw111
+#      - switch.sw114
+
+  main_power_sensors:
+    name: Power Sensors
+    icon: mdi:thermometer-lines
+    entities:
+      - sensor.total_power
+      - sensor.sw111
+      - sensor.sw112
+      - sensor.sw113
+#      - sensor.sw114
+      - sensor.sw115
+
+  main_pir:
+    name: PIR Sensors
+    entities:
+      - sensor.pir_led4
+
+  main_solar:
+    name: Solar power
+    icon: mdi:flash
+    entities:
+      - sensor.current_power
+      - sensor.todays_energy
+      - sensor.total_energy
+
+  main_automations:
+    name: Automations
+    entities:
+#      - automation.turn_on_pool_pump
+#      - automation.turn_off_pool_pump
+      - input_number.poolpump_time
+      - switch.sw115
+
+  main_speedtest:
+    name: Internet speed
+    entities:
+      - sensor.speedtest_download
+      - sensor.speedtest_upload
+      - sensor.speedtest_ping
+        
