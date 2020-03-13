@@ -1,7 +1,7 @@
 ### View tabs
   default_view:
     name: Home
-    view: yes
+#    view: yes
     icon: mdi:home
     entities:
       - sensor.amsterdam
@@ -22,15 +22,15 @@
   main_lights_view:
     name: Lights
     icon: mdi:lightbulb-on
-    view: yes
+#    view: yes
     entities:
-      - group.main_light_switches
+      - group.main_outdoor_lights
       - group.main_led_animaton
       
   main_power_view:
     name: Power
     icon: mdi:flash
-    view: yes
+#    view: yes
     entities:
       - group.main_power_switches
       - group.main_automations
@@ -43,7 +43,7 @@
 
   main_media_view:
     name: Media
-    view: yes
+#    view: yes
     icon: mdi:ice-cream
     entities:
       - group.main_mediaplayer
@@ -73,15 +73,13 @@
       - sensor.current_ozone_level
       - sensor.current_uv_index
 
-  main_light_switches:
+  main_outdoor_lights:
     name: Lights
     entities:
       - light.led1
       - light.led2
       - light.garden_lights
       - light.main_stairs
-#      - switch.sw113
-#      - switch.sw112
 
   main_led_animaton:
     name: "Animated LEDS"
@@ -92,7 +90,7 @@
   main_power_switches:
     name: Power Switches
     icon: mdi:flash
-    control: hidden
+#    control: hidden
     entities:
       - switch.sw111
 #      - switch.sw114

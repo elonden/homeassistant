@@ -1,13 +1,13 @@
 - id: pool_pump_on
   alias: Turn on pool pump
   trigger:
-  - above: '6.2'
+  - above: '1.2'
     entity_id: sensor.current_power
     for:
       minutes: 15
     platform: numeric_state
   condition:
-  - condition: or
+    condition: and
     conditions:
     - condition: time
       weekday:
@@ -18,9 +18,15 @@
       - thu
       - fri
       - sat
+    - condition: state
+      entity_id: switch.sw115
+      state: 'off'
   action:
-  - entity_id: switch.sw115
-    service: switch.turn_on
+    - service: notify.mobile_app_erwins_iphone
+      data:
+        message: "Pump turned on"
+    - service: switch.turn_on
+      entity_id: switch.sw115
   initial_state: 'on'
 
   
@@ -33,9 +39,17 @@
     below: 0.8
     for:
       minutes: 15
-  action:
-    service: switch.turn_off
+  condition: 
+    condition: state
     entity_id: switch.sw115
+    state: 'on'
+  action:
+    - service: switch.turn_off
+      entity_id: switch.sw115
+    - service: notify.mobile_app_erwins_iphone
+      data:
+        message: "Pool pump turned off"
+
 
 - id: p-garden_lights_on
   alias: Pool lights on
@@ -44,14 +58,13 @@
     offset: 00:30:00
     platform: sun
   action:
-    service: switch.turn_on
+    service: light.turn_on
     entity_id: 
-      - switch.sw113
-      - switch.sw112
+      - group.main_outdoor_lights
   condition:
     condition: state
-    entity_id: device_tracker.erwin_iphonexr
-    state: home
+    entity_id: device_tracker.erwins_iphone
+    state: 'home'
 
 - id: p-garden_lights_off
   alias: Pool lights off
@@ -60,7 +73,7 @@
     at: '23:30:00'
   action:
     service: light.turn_off
-    entity_id: group.all_lights
+    entity_id: group.main_outdoor_lights
 
 - id: d-led2-light-on
   alias: Deck LEDS on
@@ -69,7 +82,7 @@
     offset: 00:30:00
     platform: sun
   action:
-  - service: homeassistant.turn_on
+  - service: light.turn_on
     entity_id:
     - light.led2
     - light.led1
@@ -79,17 +92,13 @@
       - 255
       - 153
       - 0
-  - service: notify.ios_erwin
+  - service: notify.mobile_app_erwins_iphone
     data:
       message: Deck LEDs turned on
-  - service: tts.google_say
-    entity_id: device_tracker.erwin_iphonexr
-    data:
-      message: Decking LED lights turned on
   condition:
     condition: state
-    entity_id: device_tracker.erwin_iphonexr
-    state: home
+    entity_id: device_tracker.erwins_iphone
+    state: 'home'
 
 
 - id: d-led2-light-off
@@ -98,7 +107,7 @@
     at: '23:59:00'
     platform: time
   action:
-    service: homeassistant.turn_off
+    service: light.turn_off
     entity_id:
     - light.led2
     - light.led1
@@ -112,43 +121,32 @@
   alias: Erwin leaves the house
   trigger:
     platform: zone
-    entity_id: device_tracker.erwin_iphonexr
+    entity_id: device_tracker.erwins_iphone
     zone: zone.home
     event: leave
   action:
-  - service: homeassistant.turn_off
+  - service: light.turn_off
     entity_id:
-    - light.led2
-    - light.led1
-    - switch.sw112
-    - switch.sw113
-
+    - group.main_outdoor_switches
 
 - id: erwin_home
   alias: Erwin comes home
   trigger:
     platform: zone
-    entity_id: device_tracker.erwin_iphonexr
+    entity_id: device_tracker.erwins_iphone
     zone: zone.home
     event: enter
   action:
-  - service: homeassistant.turn_on
+  - service: light.turn_on
     entity_id:
-    - switch.sw112
-    - switch.sw113
-    - light.led2
-    - light.led1
+    - group.main_outdoor_switches
     data:
-      rgb_color:
-      - 255
-      - 163
-      - 26
+      rgb_color: [255, 163, 26]
       brightness: 100
   condition:
     condition: sun
     after: sunset
     after_offset: 00:30:00
-
 
 - id: TV
   alias: Notify when TV goes on
@@ -157,23 +155,19 @@
     entity_id: sensor.sw112
     above: 70
   action:
-  - service: notify.ios_erwin
+  - service: notify.mobile_app_erwins_iphone
     data:
       message: TV turned on
-  - service: tts.google_say
-    entity_id: device_tracker.erwin_iphonexr
-    data:
-      message: lights turned on
   condition:
     condition: state
-    entity_id: device_tracker.erwin_iphonexr
+    entity_id: device_tracker.erwins_iphone
     state: not_home
 
 
 - id: led4
   alias: LED3 animation speed
   initial_state: true
-  hide_entity: false
+#  hide_entity: false
   trigger:
   - platform: state
     entity_id: input_number.led4
@@ -183,18 +177,18 @@
       topic: /home/switch/led4/set
       payload: '{"transition":{{ trigger.to_state.state | int }}}'
 
-- id: openuv_poll
-  alias: Update opeUV every 30 minutes during daylight
-  trigger:
-    platform: time_pattern
-    minutes: '/30'
-  condition:
-    condition: and
-    conditions:
-      - condition: sun
-        after: sunrise
-      - condition: sun
-        before: sunset
-  action:
-    service: openuv.update_data
+#- id: openuv_poll
+#  alias: Update openUV every 30 minutes during daylight
+#  trigger:
+#    platform: time_pattern
+#    minutes: '/30'
+#  condition:
+#    condition: and
+#    conditions:
+#      - condition: sun
+#        after: sunrise
+#      - condition: sun
+#        before: sunset
+#  action:
+#    service: openuv.update_data
 

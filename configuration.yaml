@@ -33,7 +33,9 @@ recorder:
   purge_interval: 5
   purge_keep_days: 10
   
+###########################################################################
 mqtt:
+###########################################################################
   broker: 192.168.8.49
  #  discovery: true
  #discovery_prefix: home
@@ -48,7 +50,9 @@ config:
 mobile_app:
 
 
+###########################################################################
 http:
+###########################################################################
   # Uncomment this to add a password (recommended!)
   #  api_password: !secret http_passwd
   # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
@@ -87,16 +91,22 @@ sun:
 
 ios:
 
+###########################################################################
 media_player:
+###########################################################################
   - platform: kodi
     host: 192.168.1.227
     port: 8080
     tcp_port: 9090
 
+###########################################################################
 ffmpeg:
+###########################################################################
   ffmpeg_bin: /usr/bin/ffmpeg
 
+###########################################################################
 speedtestdotnet:
+###########################################################################
   server_id: 2604
   scan_interval:
     #      days: 0
@@ -108,11 +118,25 @@ speedtestdotnet:
     - download
     - upload
 
-sensor:
-# Weather prediction
+###########################################################################
+camera:
+###########################################################################
   - platform: bom
-    station: IDQ60801.94566
-    name: Gympie
+    location: Gympie
+    delta: 600
+
+###########################################################################
+weather:
+###########################################################################
+  -  platform: bom
+     station: IDQ60901.94566
+     name: Gympie
+
+###########################################################################
+sensor:
+###########################################################################
+  - platform: bom
+    station: IDQ60901.94566
     monitored_conditions:
 #      - apparent_t
 #      - cloud
@@ -140,6 +164,8 @@ sensor:
       - wind_dir
       - wind_spd_kmh
 #      - wind_spd_kt
+
+
 
   - platform: mqtt
     state_topic: "owntracks/erwin/Erwin"
@@ -220,14 +246,19 @@ sensor:
 
 
 # Text to speech
+###########################################################################
 tts:
+###########################################################################
   - platform: google_translate
     service_name: google_say
     cache: true
     cache_dir: /mnt/music/
     time_memory: 300
+    language: "en"
 
+###########################################################################
 switch:
+###########################################################################
   - platform: mqtt
     name: "sw111"
     state_topic: "/home/switch/sw111/relay/0"
@@ -279,41 +310,27 @@ switch:
 #    retain: true
 
 
-
-
-
-
-
-
-###########################
-# Zones
+###########################################################################
 zone:
+###########################################################################
  name: Home
  latitude: !secret latitude
  longitude: !secret longitude
  radius: 500
  icon: mdi:home
 
+###########################################################################
 zone 2:
+###########################################################################
  name: School
  latitude: !secret schoolzone_lat
  longitude: !secret schoolzone_long
  radius: 500
  icon: mdi:school
 
-
-##########################
-# Device tracker Owntrack
-#device_tracker:
-#  - platform: owntracks
-#    max_gps_accuracy: 200
-#    waypoints: True
-#    waypoint_whitelist:
-#      - erwin
-#      - Erwin
-#      - luna
-#
+###########################################################################
 owntracks:
+###########################################################################
   max_gps_accuracy: 200
   waypoints: true
   mqtt_topic: "owntracks/#"
@@ -322,17 +339,21 @@ owntracks:
     - erwin
   
 
-openuv:
-  api_key: !secret openuvapi
-  sensors: 
-    monitored_conditions: 
-      - current_uv_index
-      - current_ozone_level
-  binary_sensors: 
-    monitored_conditions: 
-      - uv_protection_window
+###########################################################################
+#openuv:
+###########################################################################
+#  api_key: !secret openuvapi
+#  sensors: 
+#    monitored_conditions: 
+#      - current_uv_index
+#      - current_ozone_level
+#  binary_sensors: 
+#    monitored_conditions: 
+#      - uv_protection_window
 
+###########################################################################
 input_number:
+###########################################################################
   poolpump_time:
     name: "Pool Pump run time in hours"
     initial: 4
@@ -351,5 +372,5 @@ light: !include lights.yaml
 group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
-notify: !include notify.yaml
+#notify: !include notify.yaml
 

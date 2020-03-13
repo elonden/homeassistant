@@ -29,9 +29,8 @@ views:
               - sensor.total_energy
             title: Solar power
             show_header_toggle: false
-
       - type: gauge
-        entity: sensor.bom_gympie_air_temp_c
+        entity: sensor.bom_air_temp_c
 #           - sensor.bom_gympie_pressure_mb
 #           - sensor.bom_gympie_rain_today
 #           - sensor.bom_gympie_relative_humidity
@@ -39,6 +38,7 @@ views:
 #           - sensor.bom_gympie_wind_speed_kmh
         title: Weather
         show_header_toggle: false
+        name: "Gympie"
         min: 0
         max: 50
         severity:
@@ -46,9 +46,9 @@ views:
           yellow: 30
           red: 35
 
-      - type: weather-forecast
-        entity: weather.home
-        name: Weather
+#      - type: weather-forecast
+#        entity: weather.home
+#        name: Weather
 
 #      - type: entities
 #        entities:
@@ -56,13 +56,27 @@ views:
 #        title: PIR Sensors
 #        show_header_toggle: false
 
-      - type: entities
-        entities:
-          - binary_sensor.protection_window
-          - sensor.current_ozone_level
-          - sensor.current_uv_index
-        title: UV Info
-        show_header_toggle: false
+#      - type: entities
+#        entities:
+#          - binary_sensor.protection_window
+#          - sensor.current_ozone_level
+#          - sensor.current_uv_index
+#        title: UV Info
+#        show_header_toggle: false
+
+
+#      - type: gauge
+#        entity: sensor.current_uv_index
+#        title: "UV rating"
+#        show_header_toggle: false
+#        name: "UV rating"
+#        min: 0
+#        max: 20
+#        severity:
+#          green: 0
+#          yellow: 6
+#          red:  8
+
       - type: entities
         entities:
           - sensor.speedtest_download
